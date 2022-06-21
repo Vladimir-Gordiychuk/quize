@@ -72,8 +72,15 @@ export const updateQuestion = async (question) => {
     return response.data;
 };
 
+export const deleteQuestion = async (id) => {
+    await api.delete(`/questions/${id}`);
+};
+
 export default {
     api,
     getQuestions,
     getQuestion,
+    createQuestion,
+    updateQuestion,
+    deleteQuestion,
 };

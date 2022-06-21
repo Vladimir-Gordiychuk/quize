@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 
 import history from "../../history";
 
-import { fetchQuestion } from "../../actions";
+import { fetchQuestion, deleteQuestion } from "../../actions";
 
 function QuestionDelete() {
     const { id } = useParams();
@@ -22,6 +22,10 @@ function QuestionDelete() {
         history.back();
     };
 
+    const onConfirm = () => {
+        dispatch(deleteQuestion(id));
+    };
+
     const renderQuestion = () => {
         return (
             <Modal onDismiss={onDismiss}>
@@ -34,7 +38,9 @@ function QuestionDelete() {
                     </div>
                 </div>
                 <div className="actions">
-                    <div className="ui negative button">Yes</div>
+                    <div className="ui negative button" onClick={onConfirm}>
+                        Yes
+                    </div>
                     <div className="ui black deny button" onClick={onDismiss}>
                         No
                     </div>
@@ -56,9 +62,7 @@ function QuestionDelete() {
                     </div>
                 </div>
                 <div className="actions">
-                    <div className="ui positive right labeled icon button">
-                        Ok
-                    </div>
+                    <div className="ui button">Ok</div>
                 </div>
             </Modal>
         );
