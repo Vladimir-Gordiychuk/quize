@@ -1,5 +1,6 @@
 import { DELETE_QUESTION, UPDATE_QUESTION, UPDATE_QUESTIONS } from "./types";
 import quize from "../apis/quize";
+import history from "../history";
 
 export const fetchQuestions = () => async (dispatch) => {
     const questions = await quize.getQuestions();
@@ -15,6 +16,15 @@ export const fetchQuestion = (id) => async (dispatch) => {
         type: UPDATE_QUESTION,
         payload: question,
     });
+};
+
+export const createQuestion = (question) => async (dispatch) => {
+    const newQuestion = await quize.createQuestion(question);
+    dispatch({
+        type: UPDATE_QUESTION,
+        payload: newQuestion,
+    });
+    history.push(`/questions/${newQuestion.id}`);
 };
 
 export const deleteQuestion = (id) => async (dispatch) => {

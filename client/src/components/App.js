@@ -8,6 +8,7 @@ import NavBar from "./NavBar";
 import QuestionList from "./questions/QuestionList";
 import Question from "./questions/Question";
 import QuestionDelete from "./questions/QuestionDelete";
+import QuestionNew from "./questions/QuestionNew";
 
 export default class App extends React.Component {
     render() {
@@ -16,6 +17,7 @@ export default class App extends React.Component {
                 <NavBar />
                 <Routes>
                     <Route path="/questions" element={<QuestionList />} />
+                    <Route path="/questions/new" element={<QuestionNew />} />
                     <Route path="/questions/:id" element={<Question />} />
                     <Route
                         path="/questions/:id/delete"

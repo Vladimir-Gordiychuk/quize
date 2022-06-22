@@ -14,6 +14,12 @@ const QuestionList = (props) => {
             <div className="content">
                 <div className="right floated content">
                     <Link
+                        to={`/questions/${question.id}/edit`}
+                        className="ui button"
+                    >
+                        Edit
+                    </Link>
+                    <Link
                         to={`/questions/${question.id}/delete`}
                         className="ui button negative"
                     >

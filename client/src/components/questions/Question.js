@@ -30,7 +30,6 @@ function Question() {
 
     if (!question) return <div>Loading...</div>;
 
-    console.log(mixMap(question.options.length));
     const options = mixMap(question.options.length).map((id) => ({
         ...question.options[id],
         id,
