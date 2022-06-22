@@ -62,7 +62,9 @@ function QuestionDelete() {
                     </div>
                 </div>
                 <div className="actions">
-                    <div className="ui button">Ok</div>
+                    <div className="ui button" onClick={onDismiss}>
+                        Ok
+                    </div>
                 </div>
             </Modal>
         );
