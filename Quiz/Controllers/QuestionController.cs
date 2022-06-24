@@ -190,6 +190,8 @@ namespace Quiz.Controllers
             _db.Options.RemoveRange(optionsToRemove);
             _db.Questions.Remove(target);
 
+            _db.SaveChanges();
+
             return NoContent();
         }
     }
