@@ -34,7 +34,14 @@ const QuestionList = (props) => {
         </div>
     ));
 
-    return <div className="ui relaxed divided list">{items}</div>;
+    return (
+        <div>
+            <Link to="/questions/new" className="ui button positive">
+                New Question
+            </Link>
+            <div className="ui relaxed divided list">{items}</div>
+        </div>
+    );
 };
 QuestionList.defaultProps = {
     questions: [],
