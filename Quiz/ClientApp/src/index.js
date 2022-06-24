@@ -1,19 +1,17 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.css";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { unstable_HistoryRouter as Router } from "react-router-dom";
 
 // Redux related stuff
 import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import reduxThunk from "redux-thunk";
 
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
 
-
-
-import App from './components/App';
+import App from "./components/App";
 import reducers from "./reducers";
 import history from "./history";
 
@@ -23,7 +21,7 @@ const store = createStore(
     composeEnhancers(applyMiddleware(reduxThunk))
 );
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
     <React.StrictMode>
@@ -32,7 +30,8 @@ root.render(
                 <App />
             </Provider>
         </Router>
-    </React.StrictMode>);
+    </React.StrictMode>
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
