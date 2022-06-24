@@ -82,9 +82,10 @@ export default function QuestionNew() {
 
     const items = options.map((option, index) => renderOption(index));
 
-    const addOption = () => {
+    const addOption = (formValues) => {
+        setText(formValues.text);
         setOptions([
-            ...options,
+            ...formValues.options,
             {
                 text: "",
                 correct: false,
@@ -97,17 +98,21 @@ export default function QuestionNew() {
         form,
         submitting,
         pristine,
-        values,
         error,
         meta,
+        submitFailed,
+        values,
     }) => {
         return (
-            <form className="ui form error" onSubmit={handleSubmit}>
+            <form
+                className={"ui form " + (submitFailed ? "error" : "")}
+                onSubmit={handleSubmit}
+            >
                 <Field name="text" label="Question content">
                     {renderField}
                 </Field>
                 {items}
-                <div className="ui button" onClick={addOption}>
+                <div className="ui button" onClick={() => addOption(values)}>
                     Add Options
                 </div>
                 <button type="submit" className="ui button">
@@ -119,6 +124,7 @@ export default function QuestionNew() {
 
     return (
         <Form
+            subscription={{ submitFailed: true, values: true }}
             onSubmit={onSubmit}
             validate={validate}
             render={renderBody}
