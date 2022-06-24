@@ -1,4 +1,4 @@
-import Modal from "../Modal";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useEffect } from "react";
@@ -28,30 +28,27 @@ function QuestionDelete() {
 
     const renderQuestion = () => {
         return (
-            <Modal onDismiss={onDismiss}>
-                <i className="close icon" onClick={onDismiss}></i>
-                <div className="header">Delete Question #{question.id}</div>
-                <div className="image content">
-                    <div className="description">
-                        <div className="ui header">{question.text}</div>
-                        <p>Delete this question?</p>
-                    </div>
-                </div>
-                <div className="actions">
-                    <div className="ui negative button" onClick={onConfirm}>
+            <Modal isOpen={true} backdrop={true} toggle={onDismiss}>
+                <ModalHeader>Delete Question #{question.id}</ModalHeader>
+                <ModalBody>
+                    <h3>{question.text}</h3>
+                    <p>Delete this question?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <div className="btn btn-danger" onClick={onConfirm}>
                         Yes
                     </div>
-                    <div className="ui black deny button" onClick={onDismiss}>
+                    <div className="btn btn-secondary" onClick={onDismiss}>
                         No
                     </div>
-                </div>
+                </ModalFooter>
             </Modal>
         );
     };
 
     const renderError = () => {
         return (
-            <Modal onDismiss={onDismiss}>
+            <Modal isOpen={true}>
                 <i className="close icon"></i>
                 <div className="header">Delete Question #{id}</div>
                 <div className="image content">
