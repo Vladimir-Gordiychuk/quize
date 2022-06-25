@@ -141,6 +141,7 @@ namespace Quiz.Controllers
                 {
                     var newOption = new Option
                     {
+                        QuestionId = question.Id,
                         Text = inputOption.Text,
                         Correct = inputOption.Correct,
                     };
