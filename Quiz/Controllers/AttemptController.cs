@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Quiz.Data;
 using Quiz.Dtos;
 using Quiz.Models;
@@ -51,6 +52,40 @@ namespace Quiz.Controllers
         [HttpPost]
         public AttemptDto Post([FromQuery] string? subject)
         {
+            var userId = GetCurrentUserId();
+
+            var unfinisedQuizzes = _db.Attempts
+                .Where(attempt =>
+                    attempt.UserId == userId &&
+                    (attempt.Status == (int) AttemptStatus.Started ||
+                    attempt.Status == (int)AttemptStatus.Undefined))
+                .Include(attempt => attempt.Quiz);
+
+            var now = DateTime.UtcNow;
+
+            bool changed = false;
+            foreach (var unfinished in unfinisedQuizzes)
+            {
+                var expireAt = unfinished.Start.AddSeconds(unfinished.Quiz.TimeLimit);
+                if (expireAt > now)
+                {
+                    changed = true;
+
+                    unfinished.Status = (int) AttemptStatus.Expired;
+                    unfinished.Finish = expireAt;
+                }
+            }
+            if (changed)
+            {
+                _db.SaveChanges();
+            }
+
+            var last = unfinisedQuizzes.FirstOrDefault(attempt => attempt.Status == (int)AttemptStatus.Started);
+            if (last != null)
+            {
+                return BuildDto(last);
+            }
+
             Models.Quiz? randomQuiz = null;
             if (_db.Quizzes.Count() < 3)
             {
@@ -77,7 +112,8 @@ namespace Quiz.Controllers
                 QuizId = randomQuiz.Id,
                 UserId = GetCurrentUserId(),
                 Start = DateTime.UtcNow,
-                Finish = null
+                Finish = null,
+                Status = (int)AttemptStatus.Started
             };
 
             _db.Attempts.Add(attempt);
@@ -159,6 +195,22 @@ namespace Quiz.Controllers
             }).ToList();
 
             return dtos;
+        }
+
+        AttemptDto BuildDto(Attempt attempt)
+        {
+            var quiz = _db.Quizzes.Find(attempt.QuizId);
+            if (quiz == null)
+                throw new ArgumentException();
+
+            var questionIds = _db.QuizQuestions
+                .Where(quizQuestion => quizQuestion.QuizId == quiz.Id)
+                .Select(quizQuestion => quizQuestion.QuestionId);
+
+            var questions = _db.Questions
+                .Where(question => questionIds.Contains(question.Id));
+
+            return BuildDto(attempt, quiz, questions);
         }
 
         AttemptDto BuildDto(Attempt attempt, Models.Quiz quiz, IEnumerable<Question> questions)
