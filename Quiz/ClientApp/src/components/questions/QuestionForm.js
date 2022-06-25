@@ -36,7 +36,7 @@ export default function QuestionForm({ initialValues, onSubmit }) {
         </div>
     );
 
-    const renderOption = (index) => (
+    const renderOption = (index, onRemove) => (
         <div className="field" key={index}>
             <label>Option #{index + 1}</label>
             <div className="fields">
@@ -69,11 +69,17 @@ export default function QuestionForm({ initialValues, onSubmit }) {
                         )}
                     </Field>
                 </div>
+                <div className="one wide field">
+                    <button
+                        className="ui button negative"
+                        onClick={() => onRemove(index)}
+                    >
+                        <i className="trash icon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     );
-
-    const items = options.map((option, index) => renderOption(index));
 
     const addOption = (formValues) => {
         setText(formValues.text);
@@ -96,6 +102,19 @@ export default function QuestionForm({ initialValues, onSubmit }) {
         submitFailed,
         values,
     }) => {
+        const removeOption = (index) => {
+            console.log(index);
+            console.log(values);
+            setText(values.text);
+            setOptions(
+                values.options.filter((item, itemIndex) => itemIndex != index)
+            );
+        };
+
+        const items = options.map((item, index) =>
+            renderOption(index, removeOption)
+        );
+
         return (
             <form
                 className={"ui form " + (submitFailed ? "error" : "")}
