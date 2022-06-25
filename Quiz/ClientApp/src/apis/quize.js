@@ -65,7 +65,7 @@ export const createQuestion = async (question) => {
 };
 
 export const updateQuestion = async (question) => {
-    if (!isNumber(question.id))
+    if (!(isNumber(question.id) || parseInt(question.id)))
         throw new Error('Question "id" property must be a number.');
     validateQuestion(question);
     const response = await api.put(`/questions/${question.id}`, question);
