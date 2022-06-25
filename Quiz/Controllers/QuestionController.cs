@@ -27,7 +27,7 @@ namespace Quiz.Controllers
                     Id = question.Id,
                     Text = question.Text,
                     Options = _db.Options
-                        .Where(option => option.Id == question.Id)
+                        .Where(option => option.QuestionId == question.Id)
                         .Select(option => new OptionDto {
                             Text = option.Text,
                             Correct = option.Correct
