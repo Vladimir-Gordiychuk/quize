@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data;
 
@@ -11,9 +12,10 @@ using Quiz.Data;
 namespace Quiz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220625140948_AllowNullForQuizAuthorId")]
+    partial class AllowNullForQuizAuthorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +107,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -393,7 +395,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Attempts", (string)null);
+                    b.ToTable("Attempts");
                 });
 
             modelBuilder.Entity("Quiz.Models.AttemptDetail", b =>
@@ -420,7 +422,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("AttemptDetails", (string)null);
+                    b.ToTable("AttemptDetails");
                 });
 
             modelBuilder.Entity("Quiz.Models.Option", b =>
@@ -445,7 +447,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Quiz.Models.Question", b =>
@@ -462,7 +464,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Quiz.Models.Quiz", b =>
@@ -491,7 +493,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Quizzes", (string)null);
+                    b.ToTable("Quizzes");
                 });
 
             modelBuilder.Entity("Quiz.Models.QuizQuestion", b =>
@@ -514,7 +516,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("QuizQuestions", (string)null);
+                    b.ToTable("QuizQuestions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

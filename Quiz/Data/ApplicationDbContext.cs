@@ -18,5 +18,18 @@ namespace Quiz.Data
 
         public DbSet<Option> Options { get; set; }
 
+        public DbSet<Models.Quiz> Quizzes { get; set; }
+
+        public DbSet<QuizQuestion> QuizQuestions { get; set; }
+
+        public DbSet<Attempt> Attempts { get; set; }
+
+        public DbSet<AttemptDetail> AttemptDetails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+
     }
 }
