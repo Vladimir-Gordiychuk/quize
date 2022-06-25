@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Quiz.Models
 {
+
     public class Attempt
     {
         public int Id { get; set; }
@@ -14,6 +15,8 @@ namespace Quiz.Models
         public DateTime Start { get; set; }
 
         public DateTime? Finish { get; set; }
+
+        public int Status { get; set; }
 
         [ValidateNever]
         [ForeignKey(nameof(QuizId))]
