@@ -7,7 +7,7 @@ namespace Quiz.Models
     {
         public int Id { get; set; }
 
-        public string AuthorId { get; set; }
+        public string? AuthorId { get; set; }
 
         public string Title { get; set; }
 

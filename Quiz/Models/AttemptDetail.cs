@@ -9,7 +9,7 @@ namespace Quiz.Models
 
         public int AttemptId { get; set; }
 
-        public int OptionId { get; set; }
+        public int? OptionId { get; set; }
 
         public bool Selected { get; set; }
 

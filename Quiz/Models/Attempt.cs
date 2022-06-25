@@ -7,13 +7,13 @@ namespace Quiz.Models
     {
         public int Id { get; set; }
 
-        public int QuizId { get; set; }
+        public int? QuizId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public DateTime Start { get; set; }
 
-        public DateTime Finish { get; set; }
+        public DateTime? Finish { get; set; }
 
         [ValidateNever]
         [ForeignKey(nameof(QuizId))]
