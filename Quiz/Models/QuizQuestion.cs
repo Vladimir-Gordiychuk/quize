@@ -3,15 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Quiz.Models
 {
-    public class Option
+
+    public class QuizQuestion
     {
         public int Id { get; set; }
 
+        public int QuizId { get; set; }
+
         public int QuestionId { get; set; }
 
-        public string Text { get; set; }
-
-        public bool Correct { get; set; }
+        [ValidateNever]
+        [ForeignKey(nameof(QuizId))]
+        public Quiz Quiz { get; set; }
 
         [ValidateNever]
         [ForeignKey(nameof(QuestionId))]
