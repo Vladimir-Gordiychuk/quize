@@ -1,4 +1,9 @@
-import { DELETE_QUESTION, UPDATE_QUESTION, UPDATE_QUESTIONS } from "./types";
+import {
+    DELETE_QUESTION,
+    UPDATE_QUESTION,
+    UPDATE_QUESTIONS,
+    UPDATE_ATTEMPT,
+} from "./types";
 import quize from "../apis/quize";
 import history from "../history";
 
@@ -42,4 +47,14 @@ export const deleteQuestion = (id) => async (dispatch) => {
         type: DELETE_QUESTION,
         payload: id,
     });
+};
+
+export const startQuiz = () => async (dispatch) => {
+    const attempt = await quize.startQuiz();
+    console.log(attempt);
+    dispatch({
+        type: UPDATE_ATTEMPT,
+        payload: attempt,
+    });
+    //history.push(`/attempts/${attempt.id}`);
 };

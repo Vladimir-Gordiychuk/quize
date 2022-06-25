@@ -10,3 +10,8 @@ export const UPDATE_QUESTION = "UPDATE_QUESTION";
  * Delete question record.
  */
 export const DELETE_QUESTION = "DELETE_QUESTION";
+
+/**
+ * Update currently active quize attempt.
+ */
+export const UPDATE_ATTEMPT = "UPDATE_ATTEMPT";
