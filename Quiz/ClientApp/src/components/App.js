@@ -18,6 +18,7 @@ import QuestionEdit from "./questions/QuestionEdit";
 
 import { Login } from "./api-authorization/Login";
 import { Logout } from "./api-authorization/Logout";
+import QuizStart from "./quizzes/QuizStart";
 
 export default class App extends React.Component {
     static displayName = App.name;
@@ -26,6 +27,8 @@ export default class App extends React.Component {
         return (
             <Layout>
                 <Routes>
+                    <Route path="/" element={<QuizStart />} />
+
                     <Route path="/questions" element={<QuestionList />} />
                     <Route path="/questions/new" element={<QuestionNew />} />
 
@@ -38,7 +41,7 @@ export default class App extends React.Component {
                         path="/questions/:id/delete"
                         element={<QuestionDelete />}
                     />
-                    <Route path="/" element={<Logo />} />
+
                     <Route path={ApplicationPaths.ApiAuthorizationPrefix}>
                         <Route
                             path={ApplicationPaths.Login}
