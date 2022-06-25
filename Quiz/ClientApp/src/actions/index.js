@@ -27,6 +27,15 @@ export const createQuestion = (question) => async (dispatch) => {
     history.push(`/questions/${newQuestion.id}`);
 };
 
+export const updateQuestion = (question) => async (dispatch) => {
+    const newQuestion = await quize.updateQuestion(question);
+    dispatch({
+        type: UPDATE_QUESTION,
+        payload: newQuestion,
+    });
+    history.push(`/questions`);
+};
+
 export const deleteQuestion = (id) => async (dispatch) => {
     quize.deleteQuestion(id);
     dispatch({
