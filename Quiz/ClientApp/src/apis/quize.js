@@ -1,4 +1,5 @@
 import axios from "axios";
+import authService from "../components/api-authorization/AuthorizeService";
 
 function isBoolean(value) {
     return typeof value === "boolean";
@@ -76,6 +77,20 @@ export const deleteQuestion = async (id) => {
     await api.delete(`/questions/${id}`);
 };
 
+export const startQuiz = async () => {
+    const token = await authService.getAccessToken();
+    const response = await api.post(
+        `/attempts`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    return response.data;
+};
+
 export default {
     api,
     getQuestions,
@@ -83,4 +98,5 @@ export default {
     createQuestion,
     updateQuestion,
     deleteQuestion,
+    startQuiz,
 };
