@@ -98,14 +98,20 @@ namespace Quiz.Controllers
                 randomQuiz = _db.Quizzes.Skip(randomQuizIndex).First();
             }
 
-            var questionIds = _db.QuizQuestions
-                .Where(quizQuestion => quizQuestion.QuizId == randomQuiz.Id)
-                .Select(quizQuestion => quizQuestion.QuestionId)
-                .ToList();
+            var questions = from question in _db.Questions
+                            join quizQuestion in _db.QuizQuestions
+                            on question.Id equals quizQuestion.QuestionId
+                            where quizQuestion.QuizId == randomQuiz.Id
+                            select question;
 
-            var questions = _db.Questions
-                .Where(question => questionIds.Contains(question.Id))
-                .ToList();
+            //var questionIds = _db.QuizQuestions
+            //    .Where(quizQuestion => quizQuestion.QuizId == randomQuiz.Id)
+            //    .Select(quizQuestion => quizQuestion.QuestionId)
+            //    .ToList();
+
+            //var questions = _db.Questions
+            //    .Where(question => questionIds.Contains(question.Id))
+            //    .ToList();
 
             var attempt = new Attempt
             {
@@ -122,16 +128,47 @@ namespace Quiz.Controllers
             return BuildDto(attempt, randomQuiz, questions);
         }
 
+        IEnumerable<int> GenerateUniqueNumbers(int min, int max, int count)
+        {
+            var random = new Random();
+            var numbers = new SortedSet<int>();
+
+            var range = max - min;
+            if (count < range)
+            {
+                throw new ArgumentException();
+            }
+
+            bool flip = ((float)count / (float)range > 0.5);
+
+            while (numbers.Count < count)
+            {
+                var number = random.Next(min, max);
+                if (numbers.Contains(number))
+                {
+                    numbers.Add(number);
+                }
+            }
+
+            if (flip)
+            {
+                return new SortedSet<int>(Enumerable.Range(min, range))
+                    .Except(numbers);
+            }
+            return numbers;
+        }
+
         Models.Quiz GenerateRandomQuiz()
         {
-            var questionCount = Math.Min(_db.Questions.Count(), 10);
-            var random = new Random();
+            var totalQuestionCount = _db.Questions.Count();
+            var questionCount = Math.Min(totalQuestionCount, 10);
+
+            var indices = GenerateUniqueNumbers(0, totalQuestionCount, questionCount);
 
             var questions = new List<Question>();
-            for (int i = 0; i < questionCount; i++)
+            foreach (var index in indices)
             {
-                var nextIndex = random.Next(questionCount);
-                var question = _db.Questions.Skip(nextIndex).First();
+                var question = _db.Questions.Skip(index).First();
                 questions.Add(question);
             }
 
