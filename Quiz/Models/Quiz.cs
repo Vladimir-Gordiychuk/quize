@@ -18,5 +18,11 @@ namespace Quiz.Models
         [ValidateNever]
         [ForeignKey(nameof(AuthorId))]
         public ApplicationUser Author { get; set; }
+
+        [ValidateNever]
+        public ICollection<Question> Questions { get; set; }
+
+        [ValidateNever]
+        public List<QuizQuestion> QuizQuestions { get; set; }
     }
 }
