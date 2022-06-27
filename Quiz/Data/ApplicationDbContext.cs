@@ -46,6 +46,10 @@ namespace Quiz.Data
                     .WithMany(quiz => quiz.QuizQuestions)
                     .HasForeignKey(pt => pt.QuizId));
 
+            builder.Entity<Models.Quiz>()
+                .Property<string>(nameof(Models.Quiz.AuthorId))
+                .IsRequired(false);
+
         }
 
     }
