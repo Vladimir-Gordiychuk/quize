@@ -15,3 +15,7 @@ export const DELETE_QUESTION = "DELETE_QUESTION";
  * Update currently active quize attempt.
  */
 export const UPDATE_ATTEMPT = "UPDATE_ATTEMPT";
+
+export const PATCH_ANSWERS = "PATCH_ANSWERS";
+
+export const UPDATE_ANSWERS = "SUBMIT_ANSWERS";

@@ -79,6 +79,7 @@ export const deleteQuestion = async (id) => {
 
 export const startQuiz = async () => {
     const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
     const response = await api.post(
         `/attempts`,
         {},

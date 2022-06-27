@@ -3,6 +3,8 @@ import {
     UPDATE_QUESTION,
     UPDATE_QUESTIONS,
     UPDATE_ATTEMPT,
+    PATCH_ANSWERS,
+    UPDATE_ANSWERS,
 } from "./types";
 import quize from "../apis/quize";
 import history from "../history";
@@ -57,4 +59,18 @@ export const startQuiz = () => async (dispatch) => {
         payload: attempt,
     });
     //history.push(`/attempts/${attempt.id}`);
+};
+
+export const patchAnswers = (answers) => {
+    return {
+        type: PATCH_ANSWERS,
+        payload: answers,
+    };
+};
+
+export const updateAnswers = (answers) => {
+    return {
+        type: UPDATE_ANSWERS,
+        payload: answers,
+    };
 };
