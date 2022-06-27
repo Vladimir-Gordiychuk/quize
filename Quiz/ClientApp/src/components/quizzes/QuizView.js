@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { startQuiz } from "../../actions";
+import { useParams } from "react-router";
+
 import Timer from "./Timer";
 import QuestionView from "../questions/QuestionView";
 import PageBar from "./PageBar";
@@ -12,6 +13,7 @@ function addSeconds(numOfSeconds, date = new Date()) {
 
 class QuizView extends React.Component {
     state = {
+        quizId: null,
         page: 0,
     };
 
@@ -24,8 +26,7 @@ class QuizView extends React.Component {
             return <div>There is not active quizes at the moment!</div>;
         }
 
-        const { activeQuiz } = this.props;
-        const { quiz, start } = activeQuiz;
+        const { quiz, start } = this.props.activeQuiz;
 
         const expire = addSeconds(
             quiz.timeLimit,
@@ -69,6 +70,4 @@ class QuizView extends React.Component {
 
 const masStateToProps = ({ activeQuiz, answers }) => ({ activeQuiz, answers });
 
-export default connect(masStateToProps, {
-    startQuiz,
-})(QuizView);
+export default connect(masStateToProps)(QuizView);

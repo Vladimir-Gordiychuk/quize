@@ -1,24 +1,37 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate } from "react-router";
 
 import { startQuiz } from "../../actions";
 import QuizView from "./QuizView";
 
 export default function QuizStart() {
     const dispatch = useDispatch();
-    const activeQuiz = useSelector(({ activeQuiz }) => activeQuiz);
+    const activeChallenge = useSelector(({ activeQuiz }) => activeQuiz);
 
     const onStartClick = () => {
         dispatch(startQuiz());
     };
 
-    if (activeQuiz) {
+    if (activeChallenge) {
         return (
             <div>
-                <QuizView />
+                <h2 className="text-center text-primary">
+                    You've active quiz alredy!
+                </h2>
+                <Navigate
+                    to={`/challenge/${activeChallenge.id}`}
+                    className="btn btn-primary"
+                >
+                    Continue
+                </Navigate>
             </div>
         );
     } else {
-        return <button onClick={onStartClick}>Take a Quiz</button>;
+        return (
+            <button className="btn btn-primary" onClick={onStartClick}>
+                Start New Quiz
+            </button>
+        );
     }
 }

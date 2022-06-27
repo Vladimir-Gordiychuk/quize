@@ -8,6 +8,7 @@ import {
 } from "./types";
 import quize from "../apis/quize";
 import history from "../history";
+import routes from "../routes";
 
 export const fetchQuestions = () => async (dispatch) => {
     const questions = await quize.getQuestions();
@@ -31,7 +32,7 @@ export const createQuestion = (question) => async (dispatch) => {
         type: UPDATE_QUESTION,
         payload: newQuestion,
     });
-    history.push(`/questions/${newQuestion.id}`);
+    history.push(routes.getQuestionViewRoute(newQuestion.id));
 };
 
 export const updateQuestion = (question) => async (dispatch) => {
@@ -40,7 +41,7 @@ export const updateQuestion = (question) => async (dispatch) => {
         type: UPDATE_QUESTION,
         payload: newQuestion,
     });
-    history.push(`/questions`);
+    history.push(routes.QUESTION_LIST);
 };
 
 export const deleteQuestion = (id) => async (dispatch) => {
@@ -58,7 +59,7 @@ export const startQuiz = () => async (dispatch) => {
         type: UPDATE_ATTEMPT,
         payload: attempt,
     });
-    //history.push(`/attempts/${attempt.id}`);
+    history.push(routes.getChallengeViewRoute(attempt.id));
 };
 
 export const patchAnswers = (answers) => {

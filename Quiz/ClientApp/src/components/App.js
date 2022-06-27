@@ -9,7 +9,8 @@ import {
     LogoutActions,
 } from "./api-authorization/ApiAuthorizationConstants";
 
-import Logo from "./Logo";
+import routes from "../routes";
+
 import QuestionList from "./questions/QuestionList";
 import Question from "./questions/Question";
 import QuestionDelete from "./questions/QuestionDelete";
@@ -19,6 +20,7 @@ import QuestionEdit from "./questions/QuestionEdit";
 import { Login } from "./api-authorization/Login";
 import { Logout } from "./api-authorization/Logout";
 import QuizStart from "./quizzes/QuizStart";
+import QuizPage from "./quizzes/QuizPage";
 
 export default class App extends React.Component {
     static displayName = App.name;
@@ -27,7 +29,14 @@ export default class App extends React.Component {
         return (
             <Layout>
                 <Routes>
-                    <Route path="/" element={<QuizStart />} />
+                    <Route
+                        path={routes.CHALLENGE_NEW}
+                        element={<QuizStart />}
+                    />
+                    <Route
+                        path={routes.CHALLENGE_VIEW}
+                        element={<QuizPage />}
+                    />
 
                     <Route path="/questions" element={<QuestionList />} />
                     <Route path="/questions/new" element={<QuestionNew />} />
