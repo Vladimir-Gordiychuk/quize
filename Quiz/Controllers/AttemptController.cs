@@ -33,7 +33,7 @@ namespace Quiz.Controllers
 
         // GET api/<AttemptController>/5
         [HttpGet("{id}")]
-        public ActionResult<Attempt> Get(int id)
+        public ActionResult<AttemptDto> Get(int id)
         {
             var userId = GetCurrentUserId();
             var target = _db.Attempts.Find(id);
@@ -45,7 +45,7 @@ namespace Quiz.Controllers
                 return StatusCode(403, "You are not authorized to access this resourse.");
             }
 
-            return target;
+            return BuildDto(target);
         }
 
         // POST api/<AttemptController>
@@ -54,7 +54,7 @@ namespace Quiz.Controllers
         {
             var userId = GetCurrentUserId();
 
-            var unfinisedQuizzes = _db.Attempts
+            var query = _db.Attempts
                 .Where(attempt =>
                     attempt.UserId == userId &&
                     (attempt.Status == (int) AttemptStatus.Started ||
@@ -64,15 +64,20 @@ namespace Quiz.Controllers
             var now = DateTime.UtcNow;
 
             bool changed = false;
-            foreach (var unfinished in unfinisedQuizzes)
+            Attempt active = null;
+            foreach (var unfinished in query)
             {
                 var expireAt = unfinished.Start.AddSeconds(unfinished.Quiz.TimeLimit);
-                if (expireAt > now)
+                if (expireAt < now)
                 {
                     changed = true;
 
                     unfinished.Status = (int) AttemptStatus.Expired;
                     unfinished.Finish = expireAt;
+                }
+                else
+                {
+                    active = unfinished;
                 }
             }
             if (changed)
@@ -80,10 +85,9 @@ namespace Quiz.Controllers
                 _db.SaveChanges();
             }
 
-            var last = unfinisedQuizzes.FirstOrDefault(attempt => attempt.Status == (int)AttemptStatus.Started);
-            if (last != null)
+            if (active != null)
             {
-                return BuildDto(last);
+                return BuildDto(active);
             }
 
             Models.Quiz? randomQuiz = null;
@@ -263,7 +267,9 @@ namespace Quiz.Controllers
                     Title = quiz.Title,
                     TimeLimit = quiz.TimeLimit,
                     Questions = questionDtos
-                }
+                },
+                Start = attempt.Start,
+                Finish = attempt.Finish,
             };
         }
 
