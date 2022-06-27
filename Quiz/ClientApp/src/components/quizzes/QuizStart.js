@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { startQuiz } from "../../actions";
+import QuizView from "./QuizView";
 
 export default function QuizStart() {
     const dispatch = useDispatch();
@@ -12,7 +13,11 @@ export default function QuizStart() {
     };
 
     if (activeQuiz) {
-        return <div>Your current quize: {activeQuiz.quiz.title}</div>;
+        return (
+            <div>
+                <QuizView />
+            </div>
+        );
     } else {
         return <button onClick={onStartClick}>Take a Quiz</button>;
     }
