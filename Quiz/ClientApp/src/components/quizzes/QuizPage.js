@@ -5,8 +5,15 @@ import { fetchChallenge } from "../../actions";
 
 import QuizView from "./QuizView";
 
+import history from "../../history";
+import routes from "../../routes";
+
+function navigate(id, page) {
+    history.push(routes.getChallengeViewRoute(id, page));
+}
+
 export default function QuizPage() {
-    const { id } = useParams();
+    const { id, page } = useParams();
 
     const challenge = useSelector(({ challenges }) => challenges[id]);
 
@@ -23,5 +30,11 @@ export default function QuizPage() {
         return <div>Data not found (or not loaded yet).</div>;
     }
 
-    return <QuizView challenge={challenge} />;
+    return (
+        <QuizView
+            challenge={challenge}
+            page={page}
+            onPageChanged={(newPage) => navigate(id, newPage)}
+        />
+    );
 }

@@ -10,8 +10,8 @@ const routes = {
 
     CHALLENGE_LIST: "/challenges",
     CHALLENGE_NEW: "/",
-    CHALLENGE_VIEW: "/challenges/:id",
-    getChallengeViewRoute: (id) => `/challenges/${id}`,
+    CHALLENGE_VIEW: "/challenges/:id/:page",
+    getChallengeViewRoute: (id, page) => `/challenges/${id}/${page || 0}`,
 
     results: "/results",
 };
