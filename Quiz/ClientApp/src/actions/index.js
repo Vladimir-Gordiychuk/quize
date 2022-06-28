@@ -67,6 +67,16 @@ export const fetchLastChallenge = () => async (dispatch) => {
     }
 };
 
+export const fetchChallenge = (id) => async (dispatch) => {
+    const challenge = await quize.getChallenge(id);
+    if (challenge && challenge.id) {
+        dispatch({
+            type: UPDATE_CHALLENGE,
+            payload: challenge,
+        });
+    }
+};
+
 export const startQuiz = () => async (dispatch) => {
     const challenge = await quize.startQuiz();
     console.log(challenge);
