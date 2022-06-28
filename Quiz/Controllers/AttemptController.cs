@@ -48,23 +48,19 @@ namespace Quiz.Controllers
             return BuildDto(target);
         }
 
-        // POST api/<AttemptController>
-        [HttpPost]
-        public AttemptDto Post([FromQuery] string? subject)
+        Attempt? GetActiveAttempt(string userId)
         {
-            var userId = GetCurrentUserId();
-
             var query = _db.Attempts
                 .Where(attempt =>
                     attempt.UserId == userId &&
-                    (attempt.Status == (int) AttemptStatus.Started ||
+                    (attempt.Status == (int)AttemptStatus.Started ||
                     attempt.Status == (int)AttemptStatus.Undefined))
                 .Include(attempt => attempt.Quiz);
 
             var now = DateTime.UtcNow;
 
             bool changed = false;
-            Attempt active = null;
+            Attempt? active = null;
             foreach (var unfinished in query)
             {
                 var expireAt = unfinished.Start.AddSeconds(unfinished.Quiz.TimeLimit);
@@ -72,7 +68,7 @@ namespace Quiz.Controllers
                 {
                     changed = true;
 
-                    unfinished.Status = (int) AttemptStatus.Expired;
+                    unfinished.Status = (int)AttemptStatus.Expired;
                     unfinished.Finish = expireAt;
                 }
                 else
@@ -85,6 +81,29 @@ namespace Quiz.Controllers
                 _db.SaveChanges();
             }
 
+            return active;
+        }
+
+        [HttpGet]
+        [Route("last")]
+        public AttemptDto? Last()
+        {
+            var userId = GetCurrentUserId();
+            var active = GetActiveAttempt(userId);
+            if (active != null)
+            {
+                return BuildDto(active);
+            }
+            return null;
+        }
+
+        // POST api/<AttemptController>
+        [HttpPost]
+        public AttemptDto Post([FromQuery] string? subject)
+        {
+            var userId = GetCurrentUserId();
+
+            var active = GetActiveAttempt(userId);
             if (active != null)
             {
                 return BuildDto(active);
@@ -107,15 +126,6 @@ namespace Quiz.Controllers
                             on question.Id equals quizQuestion.QuestionId
                             where quizQuestion.QuizId == randomQuiz.Id
                             select question;
-
-            //var questionIds = _db.QuizQuestions
-            //    .Where(quizQuestion => quizQuestion.QuizId == randomQuiz.Id)
-            //    .Select(quizQuestion => quizQuestion.QuestionId)
-            //    .ToList();
-
-            //var questions = _db.Questions
-            //    .Where(question => questionIds.Contains(question.Id))
-            //    .ToList();
 
             var attempt = new Attempt
             {
