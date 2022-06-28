@@ -52,6 +52,21 @@ export const getQuestions = async () => {
     return response.data;
 };
 
+/**
+ * Get question content using specified id.
+ * @param {number} id
+ * @returns {{
+ * id: number,
+ * text: string,
+ * options: [
+ *  {
+ *      id: number
+ *      text: string,
+ *      correct: boolean
+ *  }
+ * ]
+ * }}
+ */
 export const getQuestion = async (id) => {
     if (!(isNumber(id) || parseInt(id)))
         throw new Error('Argument "id" must be a number.');
@@ -59,6 +74,20 @@ export const getQuestion = async (id) => {
     return response.data;
 };
 
+/**
+ * Post a new question (specifing list of options and correct answers).
+ * @param {{
+ * test: string,
+ * options : [
+ *  {
+ *  text: string,
+ *  correct: boolean
+ *  }
+ * ]
+ * }} question Object describing a question.
+ * @returns Returns newly created question object
+ * where question and options are going to have ids specified.
+ */
 export const createQuestion = async (question) => {
     validateQuestion(question);
     const response = await api.post("/questions", question);
@@ -125,6 +154,12 @@ export const getAnswers = async (id) => {
     return response.data;
 };
 
+/**
+ * Submit quiz answers to server.
+ * @param {number} id
+ * @param {{}} answers A map (key-value pairs) where
+ * key is a number = option id and value is boolean = selected or not.
+ */
 export const submitAnswers = async (id, answers) => {
     const token = await authService.getAccessToken();
     if (!token) throw new Error("Authentification is required.");
@@ -146,6 +181,16 @@ export const submitAnswers = async (id, answers) => {
     }
 };
 
+/**
+ * Get challenge results (summary) for specified attempt (challenge) id.
+ * @param {number} id Challenge (attempt) id.
+ * @returns {{
+ * id : number,
+ * status : string,
+ * totalQuestions : number,
+ * correctAnswers : number
+ * }}
+ */
 export const getResult = async (id) => {
     const token = await authService.getAccessToken();
     if (!token) throw new Error("Authentification is required.");
