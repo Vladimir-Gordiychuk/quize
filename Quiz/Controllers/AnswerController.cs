@@ -85,7 +85,7 @@ namespace Quiz.Controllers
                 });
 
                 _db.AttemptDetails.AddRange(details);
-                target.Status = (int)AttemptStatus.Submited;
+                target.Status = (int)AttemptStatus.Submitted;
             }
 
             _db.SaveChanges();

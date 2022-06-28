@@ -16,7 +16,7 @@
         /// <summary>
         /// Submited.
         /// </summary>
-        Submited = 2,
+        Submitted = 2,
 
         /// <summary>
         /// Never submited in time.

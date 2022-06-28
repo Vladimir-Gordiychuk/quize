@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Quiz.Data;
 using Quiz.Dtos;
 using Quiz.Models;
@@ -43,7 +44,7 @@ namespace Quiz.Controllers
                 return StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            if (target.Status != (int)AttemptStatus.Submited)
+            if (target.Status != (int)AttemptStatus.Submitted)
             {
                 return new ResultDto
                 {
@@ -58,7 +59,7 @@ namespace Quiz.Controllers
                 from question in _db.Questions
                 join quizQuestion in _db.QuizQuestions
                 on question.Id equals quizQuestion.QuestionId
-                where quizQuestion.QuizId == target.Id
+                where quizQuestion.QuizId == target.QuizId
                 select question
                 )
                 .ToList();
@@ -66,14 +67,13 @@ namespace Quiz.Controllers
             var questionIds = questions.Select(x => x.Id).ToList();
 
             var options = _db.Options
-                          .Where(option => questionIds.Contains(option.Id))
+                          .Where(option => questionIds.Contains(option.QuestionId))
                           .ToList();
 
-            var selectedOptions = new SortedSet<int>(
-                _db.AttemptDetails
+            var selectedOptions = _db.AttemptDetails
                     .Where(detail => detail.AttemptId == target.Id && detail.Selected)
-                    .Select(x => x.Id)
-                );
+                    .Include(detail => detail.Option)
+                    .Select(detail => detail.Option);
 
             int correctCount = 0;
             foreach (var question in questions)
@@ -81,11 +81,16 @@ namespace Quiz.Controllers
                 var correctOptions = 
                     new SortedSet<int>(
                         options
-                            .Where(option => option.QuestionId == question.Id)
+                            .Where(option => option.QuestionId == question.Id && option.Correct)
                             .Select(option => option.Id)
                     );
 
-                if (correctOptions.IsSubsetOf(selectedOptions) && correctOptions.IsSupersetOf(selectedOptions))
+                var answers = selectedOptions
+                    .Where(option => option.QuestionId == question.Id)
+                    .Select(option => option.Id)
+                    .ToList();
+
+                if (correctOptions.IsSubsetOf(answers) && correctOptions.IsSupersetOf(answers))
                     ++correctCount;
             }
 
@@ -94,7 +99,7 @@ namespace Quiz.Controllers
                 Id = target.Id,
                 TotalQuestions = questions.Count,
                 CorrectAnswers = correctCount,
-                Status = "Submited"
+                Status = AttemptStatus.Submitted.ToString()
             };
         }
 
