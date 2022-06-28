@@ -15,6 +15,11 @@ namespace Quiz.Controllers
     {
         readonly ApplicationDbContext _db;
 
+        public AnswerController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
         // GET: api/<AnswerController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -75,7 +80,7 @@ namespace Quiz.Controllers
                 var details = answers.Selected.Select(answer => new AttemptDetail
                 {
                     AttemptId = target.Id,
-                    OptionId = target.Id,
+                    OptionId = answer,
                     Selected = true
                 });
 
