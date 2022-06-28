@@ -105,7 +105,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys");
+                    b.ToTable("Keys", (string)null);
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -396,7 +396,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Attempts");
+                    b.ToTable("Attempts", (string)null);
                 });
 
             modelBuilder.Entity("Quiz.Models.AttemptDetail", b =>
@@ -423,7 +423,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("AttemptDetails");
+                    b.ToTable("AttemptDetails", (string)null);
                 });
 
             modelBuilder.Entity("Quiz.Models.Option", b =>
@@ -448,7 +448,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("Quiz.Models.Question", b =>
@@ -465,7 +465,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("Quiz.Models.Quiz", b =>
@@ -493,7 +493,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("Quiz.Models.QuizQuestion", b =>
@@ -508,7 +508,7 @@ namespace Quiz.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuizQuestions");
+                    b.ToTable("QuizQuestions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
