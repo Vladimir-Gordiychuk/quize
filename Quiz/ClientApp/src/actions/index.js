@@ -6,6 +6,7 @@ import {
     UPDATE_ANSWERS,
     UPDATE_CHALLENGE,
     SET_ACTIVE_CHALLENGE,
+    RESET_ACTIVE_CHALLENGE,
 } from "./types";
 import quize from "../apis/quize";
 import history from "../history";
@@ -103,4 +104,16 @@ export const updateAnswers = (answers) => {
         type: UPDATE_ANSWERS,
         payload: answers,
     };
+};
+
+export const submitAnswers = (challengeId, answers) => async (dispatch) => {
+    await quize.submitAnswers(challengeId, answers);
+    dispatch({
+        type: UPDATE_ANSWERS,
+        payload: {},
+    });
+    dispatch({
+        type: RESET_ACTIVE_CHALLENGE,
+        payload: null,
+    });
 };

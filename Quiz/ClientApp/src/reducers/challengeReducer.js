@@ -1,5 +1,9 @@
 import _ from "lodash";
-import { UPDATE_CHALLENGE, SET_ACTIVE_CHALLENGE } from "../actions/types";
+import {
+    UPDATE_CHALLENGE,
+    SET_ACTIVE_CHALLENGE,
+    RESET_ACTIVE_CHALLENGE,
+} from "../actions/types";
 
 export default function challengeReducer(state = {}, action) {
     switch (action.type) {
@@ -19,6 +23,11 @@ export default function challengeReducer(state = {}, action) {
                     "SET_ACTIVE_CHALLENGE specified unexpected challenge payload."
                 );
             }
+        case RESET_ACTIVE_CHALLENGE:
+            return {
+                ...state,
+                active: null,
+            };
         default:
             return state;
     }
