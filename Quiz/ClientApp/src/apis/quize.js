@@ -114,6 +114,38 @@ export const startQuiz = async () => {
     return response.data;
 };
 
+export const getAnswers = async (id) => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.get(`/answers/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+export const submitAnswers = async (id, answers) => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.put(
+        `/answers/${id}`,
+        {
+            selected: Object.keys(answers).filter(
+                (optionId) => answers[optionId]
+            ),
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    if (response.status != 204) {
+        throw new Error("Bad response.");
+    }
+};
+
 export default {
     api,
     getQuestions,
@@ -124,4 +156,6 @@ export default {
     getLastChallenge,
     getChallenge,
     startQuiz,
+    getAnswers,
+    submitAnswers,
 };
