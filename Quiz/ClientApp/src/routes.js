@@ -13,7 +13,9 @@ const routes = {
     CHALLENGE_VIEW: "/challenges/:id/:page",
     getChallengeViewRoute: (id, page) => `/challenges/${id}/${page || 0}`,
 
-    results: "/results",
+    RESULT_LIST: "/results",
+    RESULT_VIEW: "/results/:id",
+    getResultViewRoute: (id) => `/results/${id}`,
 };
 
 export default routes;

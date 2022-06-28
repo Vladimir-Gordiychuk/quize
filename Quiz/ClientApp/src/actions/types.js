@@ -26,3 +26,14 @@ export const RESET_ACTIVE_CHALLENGE = "RESET_ACTIVE_CHALLENGE";
 export const PATCH_ANSWERS = "PATCH_ANSWERS";
 
 export const UPDATE_ANSWERS = "SUBMIT_ANSWERS";
+
+/**
+ * Payload is an object of the following format:
+ * {
+ * id : number,
+ * status : string,
+ * totalQuestions : number,
+ * correctAnswers : number
+ * }
+ */
+export const UPDATE_RESULT = "UPDATE_RESULT";
