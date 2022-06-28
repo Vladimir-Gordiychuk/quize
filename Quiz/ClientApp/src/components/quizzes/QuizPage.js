@@ -7,7 +7,7 @@ import QuizView from "./QuizView";
 export default function QuizPage() {
     const { id } = useParams();
 
-    const challenge = useSelector(({ activeQuiz }) => activeQuiz);
+    const challenge = useSelector(({ challenges }) => challenges[id]);
 
-    return <QuizView activeQuiz={challenge} />;
+    return <QuizView challenge={challenge} />;
 }

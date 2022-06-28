@@ -2,9 +2,10 @@ import {
     DELETE_QUESTION,
     UPDATE_QUESTION,
     UPDATE_QUESTIONS,
-    UPDATE_ATTEMPT,
     PATCH_ANSWERS,
     UPDATE_ANSWERS,
+    UPDATE_CHALLENGE,
+    SET_ACTIVE_CHALLENGE,
 } from "./types";
 import quize from "../apis/quize";
 import history from "../history";
@@ -52,14 +53,32 @@ export const deleteQuestion = (id) => async (dispatch) => {
     });
 };
 
+export const fetchLastChallenge = () => async (dispatch) => {
+    const challenge = await quize.getLastChallenge();
+    if (challenge && challenge.id) {
+        dispatch({
+            type: UPDATE_CHALLENGE,
+            payload: challenge,
+        });
+        dispatch({
+            type: SET_ACTIVE_CHALLENGE,
+            payload: challenge,
+        });
+    }
+};
+
 export const startQuiz = () => async (dispatch) => {
-    const attempt = await quize.startQuiz();
-    console.log(attempt);
+    const challenge = await quize.startQuiz();
+    console.log(challenge);
     dispatch({
-        type: UPDATE_ATTEMPT,
-        payload: attempt,
+        type: UPDATE_CHALLENGE,
+        payload: challenge,
     });
-    history.push(routes.getChallengeViewRoute(attempt.id));
+    dispatch({
+        type: SET_ACTIVE_CHALLENGE,
+        payload: challenge,
+    });
+    history.push(routes.getChallengeViewRoute(challenge.id));
 };
 
 export const patchAnswers = (answers) => {

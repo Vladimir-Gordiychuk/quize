@@ -14,7 +14,12 @@ export const DELETE_QUESTION = "DELETE_QUESTION";
 /**
  * Update currently active quize attempt.
  */
-export const UPDATE_ATTEMPT = "UPDATE_ATTEMPT";
+export const UPDATE_CHALLENGE = "UPDATE_CHALLENGE";
+
+/**
+ * Set id for currently active challenge.
+ */
+export const SET_ACTIVE_CHALLENGE = "SET_ACTIVE_CHALLENGE";
 
 export const PATCH_ANSWERS = "PATCH_ANSWERS";
 

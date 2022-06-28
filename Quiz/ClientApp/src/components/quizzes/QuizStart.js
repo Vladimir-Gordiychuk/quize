@@ -1,13 +1,17 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from "react-router";
+import { Link } from "react-router-dom";
 
-import { startQuiz } from "../../actions";
-import QuizView from "./QuizView";
+import { startQuiz, fetchLastChallenge } from "../../actions";
+import routes from "../../routes";
 
 export default function QuizStart() {
     const dispatch = useDispatch();
-    const activeChallenge = useSelector(({ activeQuiz }) => activeQuiz);
+    const activeChallenge = useSelector(({ challenges }) => challenges.active);
+
+    useEffect(() => {
+        dispatch(fetchLastChallenge());
+    }, []);
 
     const onStartClick = () => {
         dispatch(startQuiz());
@@ -16,22 +20,36 @@ export default function QuizStart() {
     if (activeChallenge) {
         return (
             <div>
-                <h2 className="text-center text-primary">
-                    You've active quiz alredy!
-                </h2>
-                <Navigate
-                    to={`/challenge/${activeChallenge.id}`}
-                    className="btn btn-primary"
-                >
-                    Continue
-                </Navigate>
+                <h2 className="text-center">You've active quiz alredy!</h2>
+                <div className="row justify-content-center">
+                    <div className="col-2">
+                        <Link
+                            to={routes.getChallengeViewRoute(
+                                activeChallenge.id
+                            )}
+                            className="btn-lg btn-primary"
+                        >
+                            Continue
+                        </Link>
+                    </div>
+                </div>
             </div>
         );
     } else {
         return (
-            <button className="btn btn-primary" onClick={onStartClick}>
-                Start New Quiz
-            </button>
+            <div>
+                <h2 className="text-center">You've got no active quizzes.</h2>
+                <div className="row justify-content-center">
+                    <div className="col-2">
+                        <button
+                            className="btn-lg btn-primary"
+                            onClick={onStartClick}
+                        >
+                            Start New Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

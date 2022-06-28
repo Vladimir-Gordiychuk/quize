@@ -77,6 +77,17 @@ export const deleteQuestion = async (id) => {
     await api.delete(`/questions/${id}`);
 };
 
+export const getLastChallenge = async () => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.get("/attempts/last", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
 export const startQuiz = async () => {
     const token = await authService.getAccessToken();
     if (!token) throw new Error("Authentification is required.");
@@ -99,5 +110,6 @@ export default {
     createQuestion,
     updateQuestion,
     deleteQuestion,
+    getLastChallenge,
     startQuiz,
 };

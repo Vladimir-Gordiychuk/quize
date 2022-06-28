@@ -5,7 +5,6 @@ export default function PageBar({ pageCount, current, onPageChanged }) {
             <li className={`page-item ${disabled}`} key="previous">
                 <a
                     className="page-link"
-                    href="#"
                     onClick={() => onPageChanged(current - 1)}
                 >
                     Previous
@@ -20,11 +19,7 @@ export default function PageBar({ pageCount, current, onPageChanged }) {
             const active = i == current ? "active" : "";
             pages.push(
                 <li className={`page-item ${active}`} key={i + 1}>
-                    <a
-                        className="page-link"
-                        href="#"
-                        onClick={() => onPageChanged(i)}
-                    >
+                    <a className="page-link" onClick={() => onPageChanged(i)}>
                         {i + 1}
                     </a>
                 </li>
@@ -39,7 +34,6 @@ export default function PageBar({ pageCount, current, onPageChanged }) {
             <li className={`page-item ${disabled}`} key="next">
                 <a
                     className="page-link"
-                    href="#"
                     onClick={() => onPageChanged(current + 1)}
                 >
                     Next
