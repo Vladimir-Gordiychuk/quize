@@ -47,6 +47,7 @@ namespace Quiz.Controllers
             {
                 return new ResultDto
                 {
+                    Id = target.Id,
                     Status = ((AttemptStatus)target.Status).ToString(),
                     TotalQuestions = 0,
                     CorrectAnswers = 0,
@@ -90,6 +91,7 @@ namespace Quiz.Controllers
 
             return new ResultDto
             {
+                Id = target.Id,
                 TotalQuestions = questions.Count,
                 CorrectAnswers = correctCount,
                 Status = "Submited"
