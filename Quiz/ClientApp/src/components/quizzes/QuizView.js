@@ -14,10 +14,6 @@ class QuizView extends React.Component {
         page: 0,
     };
 
-    submit = () => {
-        console.log(this.props.answers);
-    };
-
     onPageChanged = (newPage) => {
         this.setState({
             page: newPage,
@@ -58,7 +54,7 @@ class QuizView extends React.Component {
                     <div className="col-3">
                         <button
                             className="btn btn-primary"
-                            onClick={this.submit}
+                            onClick={this.props.onSubmit}
                         >
                             Submit Answers
                         </button>

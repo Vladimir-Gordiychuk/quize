@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { fetchChallenge } from "../../actions";
+import { fetchChallenge, submitAnswers } from "../../actions";
 
 import QuizView from "./QuizView";
 
@@ -16,6 +16,7 @@ export default function QuizPage() {
     const { id, page } = useParams();
 
     const challenge = useSelector(({ challenges }) => challenges[id]);
+    const answers = useSelector(({ answers }) => answers);
 
     const dispatch = useDispatch();
 
@@ -30,11 +31,16 @@ export default function QuizPage() {
         return <div>Data not found (or not loaded yet).</div>;
     }
 
+    const onSubmit = () => {
+        dispatch(submitAnswers(challenge.id, answers));
+    };
+
     return (
         <QuizView
             challenge={challenge}
             page={page}
             onPageChanged={(newPage) => navigate(id, newPage)}
+            onSubmit={onSubmit}
         />
     );
 }
