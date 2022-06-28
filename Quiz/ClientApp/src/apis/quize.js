@@ -146,6 +146,17 @@ export const submitAnswers = async (id, answers) => {
     }
 };
 
+export const getResult = async (id) => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.get(`/results/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
 export default {
     api,
     getQuestions,
@@ -158,4 +169,5 @@ export default {
     startQuiz,
     getAnswers,
     submitAnswers,
+    getResult,
 };
