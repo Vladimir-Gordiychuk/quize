@@ -18,19 +18,28 @@ class QuizView extends React.Component {
         console.log(this.props.answers);
     };
 
+    onPageChanged = (newPage) => {
+        this.setState({
+            page: newPage,
+        });
+    };
+
     render() {
         if (!this.props.challenge) {
             return <div>There is not active quizes at the moment!</div>;
         }
 
         const { quiz, start } = this.props.challenge;
+        const page =
+            (this.props.page && parseInt(this.props.page)) || this.state.page;
+        const onPageChanged = this.props.onPageChanged || this.onPageChanged;
 
         const expire = addSeconds(
             quiz.timeLimit,
             new Date(start.endsWith("Z") ? start : start + "Z")
         );
 
-        const question = quiz.questions[this.state.page];
+        const question = quiz.questions[page];
 
         return (
             <div>
@@ -42,12 +51,8 @@ class QuizView extends React.Component {
                     <div className="col-4">
                         <PageBar
                             pageCount={quiz.questions.length}
-                            current={this.state.page}
-                            onPageChanged={(newPage) =>
-                                this.setState({
-                                    page: newPage,
-                                })
-                            }
+                            current={page}
+                            onPageChanged={onPageChanged}
                         />
                     </div>
                     <div className="col-3">
