@@ -1,0 +1,50 @@
+# quize
+
+Backlog: 		'-' sign used to backend sub-tasks, '+' sign used for frontend sub-tasks
+
+* Manual Quiz Editor v1: a set of pages/components that allow select a subset of questions).
+	- Design Dtos.
+	- Extend QuizController to process POST request.
+	+ QuizNew, QuizEdit pages to create and edit quizzes
+	+ QuizDesigner component that allows to add/remove questions to/from a quiz and review selected quiestions.
+
+* Add multiple Tags to questions.
+	- Requires new tables to store Tags and many-to-many mapping between Tags and Questions.
+	- New props to Dtos.
+	+ New form field in QuestionForm component. (Actually, it would be great to have a specialiced Tag selector, will auto-completion).
+	
++ Advanced TagSelector component with appropriate styling.
+
+* Autocompletion for TagSelector.
+	- New controller to filter Tags using specified string.
+	+ Add some external Autocompletion component that will handle styling.
+
+* Manual Quiz Editor v2: add function to filter questions using Tags, keywords, etc.
+	- Requires new parameters to be handled for GET action in corresponding controller (and more specific queries to DB).
+
+* Add new type of question: 'order items in a correct manner'.
+	- Requires changes to Question & Option models.
+	- Requires changes to QuestionsController, ResultController and etc.
+	+ New components for question display.
+	
+* Add new type of question: 'match things on the left with things on the right'.
+	- Requires changes to Question & Option models.
+	- Requires changes to QuestionsController, ResultController and etc.
+	+ New components for question display.
+
+* Add images to questions.
+	- Requires new DB table for images and corresponding controller.
+	- Question model should be extended to store image URL or
+		Question Body should be have HTML-like format with ability to reference images (requires XSS protection).
+	
+* Add Rich Text editor (probably, HTML-like) to format questions/options (XSS-aware).
+	- May require changes to Question model.
+	+ External Rich Text Editor components to edit and display styled text.
+
+* Add function that allows to create random quiz specifing a set of Tags (subjects).
+	- Update POST action of the AttemptController (and corresponding Dtos).
+	+ Add TagSelector to QuizStart page in order to collect user preferences.
+
+Known issues:
+1. Token expiration. ClientApp does has some problem detecting expired auth tokens.
+2. Db architecture allows to edit/delete questions affecting history and challenge results.
