@@ -15,10 +15,12 @@ namespace Quiz.Controllers
     public class AttemptController : ControllerBase
     {
         readonly ApplicationDbContext _db;
+        readonly DtoBuilder _builder;
 
         public AttemptController(ApplicationDbContext db)
         {
             _db = db;
+            _builder = new DtoBuilder(db);
         }
 
         // GET: api/<AttemptController>
@@ -45,7 +47,7 @@ namespace Quiz.Controllers
                 return StatusCode(403, "You are not authorized to access this resourse.");
             }
 
-            return BuildDto(target);
+            return _builder.BuildAttempt(target);
         }
 
         Attempt? GetActiveAttempt(string userId)
@@ -92,7 +94,7 @@ namespace Quiz.Controllers
             var active = GetActiveAttempt(userId);
             if (active != null)
             {
-                return BuildDto(active);
+                return _builder.BuildAttempt(active);
             }
             return null;
         }
@@ -106,7 +108,7 @@ namespace Quiz.Controllers
             var active = GetActiveAttempt(userId);
             if (active != null)
             {
-                return BuildDto(active);
+                return _builder.BuildAttempt(active);
             }
 
             Models.Quiz? randomQuiz = null;
@@ -139,7 +141,7 @@ namespace Quiz.Controllers
             _db.Attempts.Add(attempt);
             _db.SaveChanges();
 
-            return BuildDto(attempt, randomQuiz, questions);
+            return _builder.BuildAttempt(attempt, randomQuiz, questions);
         }
 
         IEnumerable<int> GenerateUniqueNumbers(int min, int max, int count)
@@ -227,74 +229,6 @@ namespace Quiz.Controllers
 
             return hash;
         }
-
-        List<QuestionDto> BuildDtos(IEnumerable<Question> questions)
-        {
-            var questionIds = questions.Select(question => question.Id);
-            var options = _db.Options
-                .Where(option => questionIds.Contains(option.QuestionId))
-                .ToList();
-
-            var dtos = questions.Select(question => new QuestionDto
-            {
-                Id = question.Id,
-                Text = question.Text,
-                Options = options
-                    .Where(option => option.QuestionId == question.Id)
-                    .Select(option => new OptionDto(option))
-                    .ToList()
-            }).ToList();
-
-            return dtos;
-        }
-
-        AttemptDto BuildDto(Attempt attempt)
-        {
-            var quiz = _db.Quizzes.Find(attempt.QuizId);
-            if (quiz == null)
-                throw new ArgumentException();
-
-            var questionIds = _db.QuizQuestions
-                .Where(quizQuestion => quizQuestion.QuizId == quiz.Id)
-                .Select(quizQuestion => quizQuestion.QuestionId);
-
-            var questions = _db.Questions
-                .Where(question => questionIds.Contains(question.Id));
-
-            return BuildDto(attempt, quiz, questions);
-        }
-
-        AttemptDto BuildDto(Attempt attempt, Models.Quiz quiz, IEnumerable<Question> questions)
-        {
-            var questionDtos = BuildDtos(questions);
-
-            return new AttemptDto {
-                Id = attempt.Id,
-                Quiz = new QuizDto
-                {
-                    Id = quiz.Id,
-                    Hash = quiz.Hash,
-                    Title = quiz.Title,
-                    TimeLimit = quiz.TimeLimit,
-                    Questions = questionDtos
-                },
-                Start = attempt.Start,
-                Finish = attempt.Finish,
-            };
-        }
-
-        // PUT api/<AttemptController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AttemptController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
 
         private string GetCurrentUserId()
         {
