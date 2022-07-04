@@ -21,6 +21,7 @@ import { Login } from "./api-authorization/Login";
 import { Logout } from "./api-authorization/Logout";
 import QuizStart from "./quizzes/QuizStart";
 import QuizPage from "./quizzes/QuizPage";
+import QuizList from "./quizzes/QuizList";
 import ResultPage from "./results/ResultPage";
 
 export default class App extends React.Component {
@@ -39,6 +40,7 @@ export default class App extends React.Component {
                         element={<QuizPage />}
                     />
                     <Route path={routes.RESULT_VIEW} element={<ResultPage />} />
+                    <Route path={routes.QUIZ_LIST} element={<QuizList />} />
 
                     <Route path="/questions" element={<QuestionList />} />
                     <Route path="/questions/new" element={<QuestionNew />} />
