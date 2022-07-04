@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Quiz.Data;
 using Quiz.Dtos;
 using Quiz.Models;
+using Quiz.Utils;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -36,7 +37,7 @@ namespace Quiz.Controllers
             if (target is null)
                 return NotFound();
 
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
             if (target.UserId != userId)
             {
                 return StatusCode(StatusCodes.Status403Forbidden);
@@ -118,15 +119,6 @@ namespace Quiz.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        private string GetCurrentUserId()
-        {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            Debug.Assert(claimsIdentity != null, "User is required to be logged in.");
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            Debug.Assert(claim != null, "All valid users are supposed to have an Id.");
-            return claim.Value;
         }
     }
 }

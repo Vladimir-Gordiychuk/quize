@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Quiz.Data;
 using Quiz.Dtos;
 using Quiz.Models;
+using Quiz.Utils;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -27,7 +28,7 @@ namespace Quiz.Controllers
         [HttpGet]
         public IEnumerable<Attempt> Get()
         {
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
             return _db.Attempts
                 .Where(attempt => attempt.UserId == userId)
                 .ToList();
@@ -37,7 +38,7 @@ namespace Quiz.Controllers
         [HttpGet("{id}")]
         public ActionResult<AttemptDto> Get(int id)
         {
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
             var target = _db.Attempts.Find(id);
             if (target == null)
                 return NotFound();
@@ -90,7 +91,7 @@ namespace Quiz.Controllers
         [Route("last")]
         public AttemptDto? Last()
         {
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
             var active = GetActiveAttempt(userId);
             if (active != null)
             {
@@ -103,7 +104,7 @@ namespace Quiz.Controllers
         [HttpPost]
         public AttemptDto Post([FromQuery] string? subject)
         {
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
 
             var active = GetActiveAttempt(userId);
             if (active != null)
@@ -132,7 +133,7 @@ namespace Quiz.Controllers
             var attempt = new Attempt
             {
                 QuizId = randomQuiz.Id,
-                UserId = GetCurrentUserId(),
+                UserId = this.GetCurrentUserId(),
                 Start = DateTime.UtcNow,
                 Finish = null,
                 Status = (int)AttemptStatus.Started
@@ -188,7 +189,7 @@ namespace Quiz.Controllers
                 questions.Add(question);
             }
 
-            int hash = Hash(questions.Select(question => question.Id));
+            int hash = QuizHelper.Hash(questions.Select(question => question.Id));
 
             var quiz = new Models.Quiz
             {
@@ -211,32 +212,6 @@ namespace Quiz.Controllers
             _db.SaveChanges();
 
             return quiz;
-        }
-
-        int Hash(IEnumerable<int> integers)
-        {
-            IEnumerator<int> intEnum = integers.GetEnumerator();
-
-            if (intEnum.MoveNext() == false) return 0;
-
-            int hash = 0;
-            unchecked
-            {
-                hash = intEnum.Current.GetHashCode();
-                for (; intEnum.MoveNext() == true;)
-                    hash = 31 * hash + intEnum.Current.GetHashCode();
-            }
-
-            return hash;
-        }
-
-        private string GetCurrentUserId()
-        {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            Debug.Assert(claimsIdentity != null, "User is required to be logged in.");
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            Debug.Assert(claim != null, "All valid users are supposed to have an Id.");
-            return claim.Value;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Quiz.Data;
 using Quiz.Dtos;
+using Quiz.Utils;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -31,7 +32,7 @@ namespace Quiz.Controllers
                 return NotFound();
             }
 
-            var userId = GetCurrentUserId();
+            var userId = this.GetCurrentUserId();
             if (quiz.AuthorId != userId)
             {
                 return Forbid();
@@ -42,8 +43,30 @@ namespace Quiz.Controllers
 
         // POST api/quizzes
         [HttpPost]
-        public void Post(NewQuizDto newQuiz)
+        public ActionResult<QuizDto> Post(NewQuizDto newQuiz)
         {
+            var userId = this.GetCurrentUserId();
+
+            var ids = newQuiz.QuestionIds.Distinct().ToList();
+            ids.Sort();
+
+            var count = _db.Questions.Where(q => ids.Contains(q.Id)).Count();
+
+            if (ids.Count != count)
+            {
+                // some question ids specified are not valid.
+                return BadRequest("Quistion id list contains invalid id.");
+            }
+
+            var quiz = new Models.Quiz
+            {
+                Title = newQuiz.Title,
+                AuthorId = userId,
+                Hash = QuizHelper.Hash(ids)
+            };
+
+            throw new NotImplementedException();
+
         }
 
         // PUT api/quizzes/5
@@ -56,15 +79,6 @@ namespace Quiz.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        private string GetCurrentUserId()
-        {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            Debug.Assert(claimsIdentity != null, "User is required to be logged in.");
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            Debug.Assert(claim != null, "All valid users are supposed to have an Id.");
-            return claim.Value;
         }
     }
 }
