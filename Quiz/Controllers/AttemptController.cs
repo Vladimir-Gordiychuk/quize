@@ -189,7 +189,7 @@ namespace Quiz.Controllers
                 questions.Add(question);
             }
 
-            int hash = QuizHelper.Hash(questions.Select(question => question.Id));
+            int hash = QuizHelper.GetQuizHash(questions.Select(question => question.Id));
 
             var quiz = new Models.Quiz
             {
@@ -199,17 +199,23 @@ namespace Quiz.Controllers
                 Hash = hash
             };
 
-            _db.Quizzes.Add(quiz);
-            _db.SaveChanges();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
 
-            _db.QuizQuestions.AddRange(
-                questions.Select(question => new QuizQuestion
-                {
-                    QuizId = quiz.Id,
-                    QuestionId = question.Id
-                }));
+                _db.Quizzes.Add(quiz);
+                _db.SaveChanges();
 
-            _db.SaveChanges();
+                _db.QuizQuestions.AddRange(
+                    questions.Select(question => new QuizQuestion
+                    {
+                        QuizId = quiz.Id,
+                        QuestionId = question.Id
+                    }));
+
+                _db.SaveChanges();
+                transaction.Commit();
+
+            }
 
             return quiz;
         }

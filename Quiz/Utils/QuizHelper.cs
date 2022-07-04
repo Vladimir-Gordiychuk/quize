@@ -2,8 +2,18 @@
 {
     public static class QuizHelper
     {
+        public static int GetQuizHash(IEnumerable<int> questionIds)
+        {
+            var ids = questionIds.ToList();
 
-        public static int Hash(IEnumerable<int> integers)
+            // Sort ids in order to make Quiz Hash value independent
+            // from the order which was used to specify question ids.
+            ids.Sort();
+
+            return Hash(ids);
+        }
+
+        static int Hash(IEnumerable<int> integers)
         {
             IEnumerator<int> intEnum = integers.GetEnumerator();
 

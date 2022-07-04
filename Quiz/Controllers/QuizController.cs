@@ -14,6 +14,12 @@ namespace Quiz.Controllers
         readonly ApplicationDbContext _db;
         readonly DtoBuilder _builder;
 
+        public QuizController(ApplicationDbContext db)
+        {
+            _db = db;
+            _builder = new DtoBuilder(db);
+        }
+
         // GET: api/<QuizController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -43,8 +49,13 @@ namespace Quiz.Controllers
 
         // POST api/quizzes
         [HttpPost]
-        public ActionResult<QuizDto> Post(NewQuizDto newQuiz)
+        public ActionResult<QuizDto> Post([FromBody]NewQuizDto newQuiz)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var userId = this.GetCurrentUserId();
 
             var ids = newQuiz.QuestionIds.Distinct().ToList();
@@ -62,11 +73,29 @@ namespace Quiz.Controllers
             {
                 Title = newQuiz.Title,
                 AuthorId = userId,
-                Hash = QuizHelper.Hash(ids)
+                Hash = QuizHelper.GetQuizHash(ids),
+                TimeLimit = newQuiz.TimeLimit
             };
 
-            throw new NotImplementedException();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
 
+                _db.Quizzes.Add(quiz);
+                // SaveChanges in order to get quiz Id
+                _db.SaveChanges();
+
+                _db.QuizQuestions.AddRange(ids.Select(questionId => new Models.QuizQuestion
+                {
+                    QuizId = quiz.Id,
+                    QuestionId = questionId
+                }));
+
+                _db.SaveChanges();
+                transaction.Commit();
+
+            }
+
+            return _builder.BuildQuiz(quiz);
         }
 
         // PUT api/quizzes/5
