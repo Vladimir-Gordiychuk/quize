@@ -23,6 +23,7 @@ import QuizStart from "./quizzes/QuizStart";
 import QuizPage from "./quizzes/QuizPage";
 import QuizList from "./quizzes/QuizList";
 import ResultPage from "./results/ResultPage";
+import QuizEdit from "./quizzes/QuizEdit";
 
 export default class App extends React.Component {
     static displayName = App.name;
@@ -40,7 +41,6 @@ export default class App extends React.Component {
                         element={<QuizPage />}
                     />
                     <Route path={routes.RESULT_VIEW} element={<ResultPage />} />
-                    <Route path={routes.QUIZ_LIST} element={<QuizList />} />
 
                     <Route path="/questions" element={<QuestionList />} />
                     <Route path="/questions/new" element={<QuestionNew />} />
@@ -54,6 +54,9 @@ export default class App extends React.Component {
                         path="/questions/:id/delete"
                         element={<QuestionDelete />}
                     />
+
+                    <Route path={routes.QUIZ_LIST} element={<QuizList />} />
+                    <Route path={routes.QUIZ_EDIT} element={<QuizEdit />} />
 
                     <Route path={ApplicationPaths.ApiAuthorizationPrefix}>
                         <Route

@@ -18,6 +18,9 @@ const routes = {
     getResultViewRoute: (id) => `/results/${id}`,
 
     QUIZ_LIST: "/quizzes",
+    QUIZ_NEW: "/quizzes/new",
+    QUIZ_EDIT: "/quizzes/edit/:id",
+    getQuizEditRoute: (id) => `/quizzes/edit/${id}`,
 };
 
 export default routes;
