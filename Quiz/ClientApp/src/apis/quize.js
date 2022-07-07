@@ -128,6 +128,33 @@ export const getChallenge = async (id) => {
     return response.data;
 };
 
+/**
+ * Start a new challenge!
+ * @returns {{
+ * id: number,
+ * start: string,
+ * finish: string,
+ * quiz: {
+ *  id: number,
+ *  title: string,
+ *  timeLimit: number,
+ *  hash: number,
+ *  questions: [
+ *      {
+ *          id: number,
+ *          text: string,
+ *          options: [
+ *              {
+ *                  id: option,
+ *                  text: string,
+ *                  coorect: boolean
+ *              }
+ *          ]
+ *      }
+ *  ]
+ * }
+ * }} Full challenge & quiz data.
+ */
 export const startQuiz = async () => {
     const token = await authService.getAccessToken();
     if (!token) throw new Error("Authentification is required.");
@@ -202,6 +229,73 @@ export const getResult = async (id) => {
     return response.data;
 };
 
+/**
+ * Get list of quizzes.
+ * @returns {[
+ * {
+ * id: number,
+ * title: string,
+ * timeLimit: number,
+ * hash: number,
+ * questions: [
+ *  {
+ *      id: number,
+ *      text: string,
+ *      options: [
+ *          {
+ *              id: option,
+ *              text: string,
+ *              coorect: boolean
+ *          }
+ *      ]
+ *  }
+ * ]}
+ * ]}
+ */
+export const getQuizzes = async () => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.get("/quizzes", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+/**
+ * Create new quiz.
+ * @param {{ title: string, timeLimit: number, questionIds: [number]}} newQuiz Quiz data.
+ * @returns {{
+ * id: number,
+ * title: string,
+ * timeLimit: number,
+ * hash: number,
+ * questions: [
+ *  {
+ *      id: number,
+ *      text: string,
+ *      options: [
+ *          {
+ *              id: option,
+ *              text: string,
+ *              coorect: boolean
+ *          }
+ *      ]
+ *  }
+ * ]}}
+ */
+export const createQuiz = async (newQuiz) => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.post(`/quizzes`, newQuiz, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
 export default {
     api,
     getQuestions,
@@ -215,4 +309,6 @@ export default {
     getAnswers,
     submitAnswers,
     getResult,
+    getQuizzes,
+    createQuiz,
 };
