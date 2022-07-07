@@ -8,6 +8,9 @@ import {
     SET_ACTIVE_CHALLENGE,
     RESET_ACTIVE_CHALLENGE,
     UPDATE_RESULT,
+    FETCH_QUIZZES,
+    COMMIT_QUIZ,
+    UPDATE_QUIZ,
 } from "./types";
 import quize from "../apis/quize";
 import history from "../history";
@@ -125,5 +128,26 @@ export const fetchResult = (id) => async (dispatch) => {
     dispatch({
         type: UPDATE_RESULT,
         payload: result,
+    });
+};
+
+export const fetchQuizzes = () => async (dispatch) => {
+    const quizzes = await quize.getQuizzes();
+    dispatch({
+        type: FETCH_QUIZZES,
+        payload: quizzes,
+    });
+};
+
+/**
+ * POST new quiz to server, retrive id for newly created quiz
+ * and set this id for a new quiz.
+ * @param {{ title: string, timeLimit: number, questionIds: [number]}} newQuiz Quiz data.
+ */
+export const createQuiz = (newQuiz) => async (dispatch) => {
+    const quiz = await quize.createQuiz(newQuiz);
+    dispatch({
+        type: COMMIT_QUIZ,
+        payload: quiz,
     });
 };

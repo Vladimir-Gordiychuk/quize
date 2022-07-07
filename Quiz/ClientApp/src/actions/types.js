@@ -37,3 +37,22 @@ export const UPDATE_ANSWERS = "SUBMIT_ANSWERS";
  * }
  */
 export const UPDATE_RESULT = "UPDATE_RESULT";
+
+/**
+ * Fetch list of my quizzes.
+ */
+export const FETCH_QUIZZES = "FETCH_QUIZZES";
+
+/**
+ * Action.payload is a full-price quiz object with a valid id.
+ * Put this newly created quiz to a map of quizzes
+ * and reset 'new' quiz state (the one that was in design mode).
+ */
+export const COMMIT_QUIZ = "COMMIT_QUIZ";
+
+/**
+ * Update specific quiz in the redux store.
+ * If action.payload.id is not specified -
+ * update the 'new' quiz (the one that is in design mode).
+ */
+export const UPDATE_QUIZ = "UPDATE_QUIZ";
