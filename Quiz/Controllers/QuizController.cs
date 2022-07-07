@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Quiz.Data;
 using Quiz.Dtos;
 using Quiz.Utils;
-using System.Diagnostics;
-using System.Security.Claims;
 
 namespace Quiz.Controllers
 {
+    [Authorize]
     [Route("api/quizzes")]
     [ApiController]
     public class QuizController : ControllerBase
@@ -22,9 +22,17 @@ namespace Quiz.Controllers
 
         // GET: api/<QuizController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<QuizDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var userId = this.GetCurrentUserId();
+
+            var quizzes = _db.Quizzes
+                .Where(x => x.AuthorId == userId)
+                .ToList();
+
+            return quizzes
+                .Select(quiz => _builder.BuildQuiz(quiz))
+                .ToList();
         }
 
         // GET api/quizzes/5
