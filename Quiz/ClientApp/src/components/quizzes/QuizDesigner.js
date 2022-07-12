@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Form, Field } from "react-final-form";
-import { useSelector } from "react-redux";
 
 import QuestionSelector from "../questions/QuestionSelector";
 
@@ -15,11 +14,12 @@ import QuestionSelector from "../questions/QuestionSelector";
  * },
  * questions: [
  *  { id: number, text: string }
- * ]
+ * ],
+ * onQuizSubmit : Function
  * }} props
  * @returns
  */
-export default function QuizDesigner({ quiz, questions }) {
+export default function QuizDesigner({ quiz, questions, onQuizSubmit }) {
     const [selected, setSelected] = useState(
         (quiz &&
             quiz.questions &&
@@ -30,10 +30,10 @@ export default function QuizDesigner({ quiz, questions }) {
     if (!quiz) return null;
 
     const onSubmit = (formValues) => {
-        console.log({
+        onQuizSubmit({
             ...formValues,
-            questions: selected,
-            id: quiz.id,
+            questionIds: selected,
+            id: quiz.id || undefined,
         });
     };
 

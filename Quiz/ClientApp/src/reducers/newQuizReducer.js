@@ -1,7 +1,13 @@
 import _ from "lodash";
 import { COMMIT_QUIZ, UPDATE_QUIZ } from "../actions/types";
 
-export default function newQuizReducer(state = {}, action) {
+const emptyQuiz = {
+    title: "",
+    timeLimit: 300,
+    questions: [],
+};
+
+export default function newQuizReducer(state = emptyQuiz, action) {
     switch (action.type) {
         case COMMIT_QUIZ:
             // Reset new quiz state.
