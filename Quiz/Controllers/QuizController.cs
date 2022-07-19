@@ -57,7 +57,7 @@ namespace Quiz.Controllers
 
         // POST api/quizzes
         [HttpPost]
-        public ActionResult<QuizDto> Post([FromBody]NewQuizDto newQuiz)
+        public ActionResult<QuizDto> Post([FromBody]UpdateQuizDto newQuiz)
         {
             if (!ModelState.IsValid)
             {
@@ -108,8 +108,58 @@ namespace Quiz.Controllers
 
         // PUT api/quizzes/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<QuizDto> Put(int id, [FromBody] UpdateQuizDto quiz)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var target = _db.Quizzes.Find(id);
+            if (target == null)
+            {
+                return NotFound();
+            }
+
+            var userId = this.GetCurrentUserId();
+            if (target.AuthorId != userId)
+            {
+                return Forbid();
+            }
+
+            var questionIds = (
+                from quizQuestion in _db.QuizQuestions
+                where quizQuestion.QuizId == target.Id
+                select quizQuestion
+            )
+            .ToList();
+
+            var questionsToRemove = questionIds
+                .Where(quizQuestion => !quiz.QuestionIds.Contains(quizQuestion.QuestionId))
+                .ToList();
+
+            var questionsToAdd = quiz.QuestionIds
+                .Where(id => !questionIds.Any(quizQuestion => quizQuestion.QuestionId == id))
+                .Select(questionId => new Models.QuizQuestion
+                {
+                    QuizId = target.Id,
+                    QuestionId = questionId
+                })
+                .ToList();
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                target.Title = quiz.Title;
+                target.TimeLimit = quiz.TimeLimit;
+
+                _db.QuizQuestions.RemoveRange(questionsToRemove);
+                _db.QuizQuestions.AddRange(questionsToAdd);
+
+                _db.SaveChanges();
+                transaction.Commit();
+            }
+
+            return _builder.BuildQuiz(target);
         }
 
         // DELETE api/quizzes/5

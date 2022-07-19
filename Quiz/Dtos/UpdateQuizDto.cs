@@ -2,7 +2,7 @@
 
 namespace Quiz.Dtos
 {
-    public class NewQuizDto
+    public class UpdateQuizDto
     {
         [Required]
         public string Title { get; set; }
