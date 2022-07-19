@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import QuizDesigner from "./QuizDesigner";
 
-import { createQuiz } from "../../actions";
+import { createQuiz, updateQuiz } from "../../actions";
 
 export default function QuizEdit(props) {
     const { id } = useParams();
@@ -14,13 +14,9 @@ export default function QuizEdit(props) {
     const questions = useSelector(({ questions }) => Object.values(questions));
     const dispatch = useDispatch();
 
-    const updateQuiz = (quiz) => {
-        throw new Error("Not implemented yet!");
-    };
+    const submitAction = quizId ? updateQuiz : createQuiz;
+    const onQuizSubmit = (quizData) => dispatch(submitAction(quizData));
 
-    const submitAction = quizId
-        ? (quiz) => dispatch(updateQuiz(quiz))
-        : (quiz) => dispatch(createQuiz(quiz));
     const caption = quizId ? `Edit Quiz #${quizId}` : "Create a New Quiz";
 
     return (
@@ -30,7 +26,7 @@ export default function QuizEdit(props) {
                 <QuizDesigner
                     quiz={quiz}
                     questions={questions}
-                    onQuizSubmit={submitAction}
+                    onQuizSubmit={onQuizSubmit}
                 />
             </div>
         </div>
