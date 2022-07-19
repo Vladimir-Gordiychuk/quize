@@ -296,6 +296,39 @@ export const createQuiz = async (newQuiz) => {
     return response.data;
 };
 
+/**
+ * Update existing quiz.
+ * @param {{ id: number, title: string, timeLimit: number, questionIds: [number]}} quiz Quiz data.
+ * @returns {{
+ * id: number,
+ * title: string,
+ * timeLimit: number,
+ * hash: number,
+ * questions: [
+ *  {
+ *      id: number,
+ *      text: string,
+ *      options: [
+ *          {
+ *              id: option,
+ *              text: string,
+ *              coorect: boolean
+ *          }
+ *      ]
+ *  }
+ * ]}}
+ */
+export const updateQuiz = async (quiz) => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.put(`/quizzes/${quiz.id}`, quiz, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
 export default {
     api,
     getQuestions,
@@ -311,4 +344,5 @@ export default {
     getResult,
     getQuizzes,
     createQuiz,
+    updateQuiz,
 };
