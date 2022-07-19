@@ -150,4 +150,17 @@ export const createQuiz = (newQuiz) => async (dispatch) => {
         type: COMMIT_QUIZ,
         payload: quiz,
     });
+    history.push(routes.getQuizEditRoute(quiz.id));
+};
+
+/**
+ * PUT updated data for existing quiz to server.
+ * @param {{ id: number, title: string, timeLimit: number, questionIds: [number]}} quiz Quiz data.
+ */
+export const updateQuiz = (quiz) => async (dispatch) => {
+    const updatedQuiz = await quize.updateQuiz(quiz);
+    dispatch({
+        type: UPDATE_QUIZ,
+        payload: updatedQuiz,
+    });
 };
