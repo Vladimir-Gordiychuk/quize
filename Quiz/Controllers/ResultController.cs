@@ -24,9 +24,16 @@ namespace Quiz.Controllers
 
         // GET: api/<ResultController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<ResultDto> Get()
         {
-            return new string[] { "value1", "value2" };
+            var userId = this.GetCurrentUserId();
+
+            var attempts = _db.Attempts
+                .Where(x => x.UserId == userId)
+                .ToList();
+
+            return attempts
+                .Select(attempt => GetResult(attempt, _db));
         }
 
         // GET api/<ResultController>/5
@@ -43,41 +50,46 @@ namespace Quiz.Controllers
                 return StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            if (target.Status != (int)AttemptStatus.Submitted)
+            return GetResult(target, _db);
+        }
+
+        private static ResultDto GetResult(Attempt attempt, ApplicationDbContext db)
+        {
+            if (attempt.Status != (int)AttemptStatus.Submitted)
             {
                 return new ResultDto
                 {
-                    Id = target.Id,
-                    Status = ((AttemptStatus)target.Status).ToString(),
+                    Id = attempt.Id,
+                    Status = ((AttemptStatus)attempt.Status).ToString(),
                     TotalQuestions = 0,
                     CorrectAnswers = 0,
                 };
             }
 
             var questions = (
-                from question in _db.Questions
-                join quizQuestion in _db.QuizQuestions
+                from question in db.Questions
+                join quizQuestion in db.QuizQuestions
                 on question.Id equals quizQuestion.QuestionId
-                where quizQuestion.QuizId == target.QuizId
+                where quizQuestion.QuizId == attempt.QuizId
                 select question
                 )
                 .ToList();
 
             var questionIds = questions.Select(x => x.Id).ToList();
 
-            var options = _db.Options
+            var options = db.Options
                           .Where(option => questionIds.Contains(option.QuestionId))
                           .ToList();
 
-            var selectedOptions = _db.AttemptDetails
-                    .Where(detail => detail.AttemptId == target.Id && detail.Selected)
+            var selectedOptions = db.AttemptDetails
+                    .Where(detail => detail.AttemptId == attempt.Id && detail.Selected)
                     .Include(detail => detail.Option)
                     .Select(detail => detail.Option);
 
             int correctCount = 0;
             foreach (var question in questions)
             {
-                var correctOptions = 
+                var correctOptions =
                     new SortedSet<int>(
                         options
                             .Where(option => option.QuestionId == question.Id && option.Correct)
@@ -95,7 +107,7 @@ namespace Quiz.Controllers
 
             return new ResultDto
             {
-                Id = target.Id,
+                Id = attempt.Id,
                 TotalQuestions = questions.Count,
                 CorrectAnswers = correctCount,
                 Status = AttemptStatus.Submitted.ToString()
