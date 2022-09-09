@@ -80,6 +80,15 @@ export class NavMenu extends Component {
                                         Questions
                                     </NavLink>
                                 </NavItem>
+                                <NavItem>
+                                    <NavLink
+                                        tag={Link}
+                                        className="text-dark"
+                                        to={routes.RESULT_LIST}
+                                    >
+                                        Results
+                                    </NavLink>
+                                </NavItem>
                                 <LoginMenu></LoginMenu>
                             </ul>
                         </Collapse>
