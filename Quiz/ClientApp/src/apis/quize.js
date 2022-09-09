@@ -209,6 +209,30 @@ export const submitAnswers = async (id, answers) => {
 };
 
 /**
+ * Get challenge results for all attempts made by current user.
+ * @returns {
+ * [
+ * {
+ * id : number,
+ * status : string,
+ * totalQuestions : number,
+ * correctAnswers : number
+ * }
+ * ]
+ * }
+ */
+export const getResults = async () => {
+    const token = await authService.getAccessToken();
+    if (!token) throw new Error("Authentification is required.");
+    const response = await api.get(`/results`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+/**
  * Get challenge results (summary) for specified attempt (challenge) id.
  * @param {number} id Challenge (attempt) id.
  * @returns {{
@@ -341,6 +365,7 @@ export default {
     startQuiz,
     getAnswers,
     submitAnswers,
+    getResults,
     getResult,
     getQuizzes,
     createQuiz,
