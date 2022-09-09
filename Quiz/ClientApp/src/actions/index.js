@@ -7,11 +7,13 @@ import {
     UPDATE_CHALLENGE,
     SET_ACTIVE_CHALLENGE,
     RESET_ACTIVE_CHALLENGE,
-    UPDATE_RESULT,
     FETCH_QUIZZES,
     COMMIT_QUIZ,
     UPDATE_QUIZ,
+    UPDATE_RESULTS,
+    UPDATE_RESULT,
 } from "./types";
+
 import quize from "../apis/quize";
 import history from "../history";
 import routes from "../routes";
@@ -121,6 +123,14 @@ export const submitAnswers = (challengeId, answers) => async (dispatch) => {
         payload: null,
     });
     history.push(routes.getResultViewRoute(challengeId));
+};
+
+export const fetchResults = () => async (dispatch) => {
+    const results = await quize.getResults();
+    dispatch({
+        type: UPDATE_RESULTS,
+        payload: results,
+    });
 };
 
 export const fetchResult = (id) => async (dispatch) => {
