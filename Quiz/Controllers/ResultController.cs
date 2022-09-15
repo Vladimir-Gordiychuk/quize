@@ -55,11 +55,14 @@ namespace Quiz.Controllers
 
         private static ResultDto GetResult(Attempt attempt, ApplicationDbContext db)
         {
+            var quiz = db.Quizzes.Find(attempt.QuizId);
+
             if (attempt.Status != (int)AttemptStatus.Submitted)
             {
                 return new ResultDto
                 {
                     Id = attempt.Id,
+                    Title = quiz.Title,
                     Status = ((AttemptStatus)attempt.Status).ToString(),
                     TotalQuestions = 0,
                     CorrectAnswers = 0,
@@ -108,6 +111,7 @@ namespace Quiz.Controllers
             return new ResultDto
             {
                 Id = attempt.Id,
+                Title = quiz.Title,
                 TotalQuestions = questions.Count,
                 CorrectAnswers = correctCount,
                 Status = AttemptStatus.Submitted.ToString()
