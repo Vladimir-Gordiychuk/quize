@@ -14,8 +14,10 @@ export default function ResultListPage() {
     var renderedResults = results.map((result) => (
         <li className="list-group-item" key={result.id}>
             <a href={`results/${result.id}`}>
-                Result #{result.id} ({result.correctAnswers}/
-                {result.totalQuestions})
+                Result #{result.id} for quiz '{result.title}' :
+                {result.status == "Submitted"
+                    ? ` ${result.correctAnswers}/${result.totalQuestions}`
+                    : ` ${result.status}`}
             </a>
         </li>
     ));
