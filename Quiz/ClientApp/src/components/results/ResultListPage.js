@@ -12,7 +12,7 @@ export default function ResultListPage() {
     var results = useSelector((state) => Object.values(state.results));
 
     var renderedResults = results.map((result) => (
-        <li>
+        <li className="list-group-item" key={result.id}>
             <a href={`results/${result.id}`}>
                 Result #{result.id} ({result.correctAnswers}/
                 {result.totalQuestions})
@@ -20,5 +20,5 @@ export default function ResultListPage() {
         </li>
     ));
 
-    return <ul>{renderedResults}</ul>;
+    return <ul className="list-group">{renderedResults}</ul>;
 }
